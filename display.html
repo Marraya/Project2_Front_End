@@ -353,13 +353,23 @@
                 <!--Grid column-->
                 <div class="col-md-12 mb-5">
                     <div class="card">
-                        <h5 class="card-header h5"><span id="post_title">Create Thread (Thread Title)</span></h5>
+                        <h5 class="card-header h5">Create Thread</h5>
                         <div class="card-body">
-                            <h5 class="card-title"><span id="post_author">Thread Author</span></h5>
+                            <h5 class="card-title"><span id="post_author">Thread Author (Guest)</span></h5>
                             <div class="form-group shadow-textarea">
-                                <label for="CHANGE_THIS"><span id="post_category">Thread Category</span></label>
+                                <i class="fas fa-user prefix"></i>
+                                <label for="CHANGE_THIS">Thread Title</label>
+                                <input type="text" id="post_title" class="form-control">
+                                
+                                <i class="fas fa-user prefix"></i>
+                                <label for="CHANGE_THIS">Thread Category</label>
+                                <input type="text" id="post_category" class="form-control">
+
+                                <i class="fas fa-user prefix"></i>
+                                <label for="CHANGE_THIS">Thread Body</label>
                                 <textarea class="form-control z-depth-1" id="post_body" rows="3"
                                     placeholder="Write something here..."></textarea>
+                                    
                             </div>
                             <a href="#!" class="btn btn-primary">Submit Thread</a>
                         </div>
