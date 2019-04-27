@@ -1,0 +1,80 @@
+body {
+  
+  background-image: url('../img/coma_bg.jpg');
+  color: white;
+}
+
+h1 {
+  margin: 0 auto;
+}
+
+.faceless img {
+
+  height: 400px;
+  margin: 0 auto;
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+
+.jumbotron {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.full-game-container {
+  background: black;
+  padding: 5%;
+  text-align: center;
+  box-shadow: 2px 2px 15px #00000030;
+  border-radius: 10px;
+}
+
+.main-button-container {
+  padding-top: 5%;
+  padding-bottom: 5%;
+  margin: 0 auto;
+}
+
+.answer {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.timer-p {
+  margin-top: 20px;
+}
+
+.answer:hover {
+  background: red;
+}
+
+#user-question-area,
+#user-wronganswer-area,
+#user-timeover-area,
+#user-correctanswer-area {
+
+  font-family: Lato;
+  font-size: 2em;
+}
+
+#question-here {
+  padding-bottom: 15px;
+}
+
+.answer {
+  width: 60%;
+  margin: 0 auto;
+  padding-top: 15px;
+  margin-top: 15px;
+  height: 80px;
+  color: black;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.reset-button {
+  margin-top: 40px;
+}
+
+.summary-correct {
+  margin-top: 40px;
+}

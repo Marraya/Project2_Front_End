@@ -32,7 +32,8 @@
     </style>
 </head>
 
-<body class="grey lighten-3">
+<body class="lighten-3"
+    style="background: url('code_bg_white.jpg');background-size:contain;background-attachment:fixed;">
 
     <!--Main Navigation-->
     <header>
@@ -43,7 +44,8 @@
 
                 <!-- Brand -->
                 <a class="navbar-brand waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
-                    <strong class="blue-text">Bootcamp Hub</strong>
+                    <!-- <strong class="blue-text">Bootcamp Hub</strong> -->
+                    <img src="bcs_logo_xs.png" class="img-fluid" alt="">
                 </a>
 
                 <!-- Collapse -->
@@ -64,40 +66,33 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/"
-                                target="_blank">About
-                                MDB</a>
+                            <a class="nav-link waves-effect" href="https://mdbootstrap.com" target="_blank">What is
+                                Material Design?</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link waves-effect"
-                                href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
-                                target="_blank">Free
-                                download</a>
+                            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs"
+                                target="_blank">Technical Documentation</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link waves-effect" href="https://mdbootstrap.com/education/bootstrap/"
-                                target="_blank">Free
-                                tutorials</a>
+                            <a class="nav-link waves-effect" href="#" target="_blank">Donations</a>
                         </li>
                     </ul>
 
                     <!-- Right -->
                     <ul class="navbar-nav nav-flex-icons">
                         <li class="nav-item">
-                            <a href="https://www.facebook.com/mdbootstrap" class="nav-link waves-effect"
-                                target="_blank">
+                            <a href="#" class="nav-link waves-effect" target="_blank">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="https://twitter.com/MDBootstrap" class="nav-link waves-effect" target="_blank">
+                            <a href="#" class="nav-link waves-effect" target="_blank">
                                 <i class="fab fa-twitter"></i>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
-                                class="nav-link border border-light rounded waves-effect" target="_blank">
-                                <i class="fab fa-github mr-2"></i>MDB GitHub
+                            <a href="#" class="nav-link border border-light rounded waves-effect" data-toggle="modal" data-target="#modalLoginForm">
+                                <i class="fas fa-user-secret mr-2"></i>Admin Login
                             </a>
                         </li>
                     </ul>
@@ -119,15 +114,16 @@
                 <a href="#" class="list-group-item active waves-effect">
                     <i class="fas fa-chart-pie mr-3"></i>Home
                 </a>
+                <a href="thread.html" class="list-group-item list-group-item-action waves-effect">
+                    <i class="fas fa-user mr-3"></i>BCS Forums</a>
                 <a href="#" class="list-group-item list-group-item-action waves-effect">
-                    <i class="fas fa-user mr-3"></i>Sample Nav 2</a>
-                <a href="#" class="list-group-item list-group-item-action waves-effect">
-                    <i class="fas fa-table mr-3"></i>Sample Nav 3</a>
-                <a href="#" class="list-group-item list-group-item-action waves-effect">
-                    <i class="fas fa-map mr-3"></i>Sample Nav 4</a>
-                <a href="#" class="list-group-item list-group-item-action waves-effect">
-                    <i class="fas fa-money-bill-alt mr-3"></i>Sample Nav 5</a>
+                    <i class="fas fa-table mr-3"></i>Homework Help</a>
             </div>
+
+            <p class="mt-5 mb-5 text-center">"When you have learned to snatch the error code from the trap frame, it
+                will be time for you to leave."</p>
+
+            <img src="blackhole.gif" class="img-fluid img-thumbnail align-bottom" alt="Responsive image">
 
         </div>
         <!-- Sidebar -->
@@ -360,7 +356,7 @@
                                 <i class="fas fa-user prefix"></i>
                                 <label for="CHANGE_THIS">Thread Title</label>
                                 <input type="text" id="post_title" class="form-control">
-                                
+
                                 <i class="fas fa-user prefix"></i>
                                 <label for="CHANGE_THIS">Thread Category</label>
                                 <input type="text" id="post_category" class="form-control">
@@ -369,12 +365,46 @@
                                 <label for="CHANGE_THIS">Thread Body</label>
                                 <textarea class="form-control z-depth-1" id="post_body" rows="3"
                                     placeholder="Write something here..."></textarea>
-                                    
+
                             </div>
                             <a href="#!" class="btn btn-primary">Submit Thread</a>
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header text-center">
+                      <h4 class="modal-title w-100 font-weight-bold">Sign in</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body mx-3">
+                      <div class="md-form mb-5">
+                        <i class="fas fa-envelope prefix grey-text"></i>
+                        <input type="email" id="defaultForm-email" class="form-control validate">
+                        <label data-error="wrong" data-success="right" for="defaultForm-email">Your email</label>
+                      </div>
+              
+                      <div class="md-form mb-4">
+                        <i class="fas fa-lock prefix grey-text"></i>
+                        <input type="password" id="defaultForm-pass" class="form-control validate">
+                        <label data-error="wrong" data-success="right" for="defaultForm-pass">Your password</label>
+                      </div>
+              
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                      <button class="btn btn-default">Login</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
             </div>
 
         </div>
