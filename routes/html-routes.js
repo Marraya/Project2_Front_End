@@ -14,7 +14,7 @@ module.exports = function(app) {
 
   // index route loads the home page
   app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "../public/index.html"));
+    res.sendFile(path.join(__dirname, "../index.html"));  // correct file path "../public/index.html"
     /* uncomment this section once all the HTMLs are done
     res.sendFile(path.join(__dirname, "../public/index.html")); 
     */

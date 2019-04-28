@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "Behala-1756",
+    "password": "root",
     "database": "forums_db",
     "host": "localhost",
     "dialect": "mysql",
