@@ -1,185 +1,141 @@
-$(document).ready(function () {
-  // Getting jQuery references to the post body, title, form, and author select
-  var bodyInput = $("#post_body");
-  var titleInput = $("#post_title");
-  var authorSelect = $("#post_author");
-  var categorySelect = $("#post_category");
-  var forumForm = $("#post_forum"); // old name cmsForm
+$(document).ready(function() {
+  /* global moment */
 
-  // Adding an event listener for when the form is submitted
-  $(forumForm).on("submit", handleFormSubmit);
+  // blogContainer holds all of our posts (up to 5)
+  var blogContainer = $(".blog-container");
+  var postCategorySelect = $("#category");
+  // Click events for the edit and delete buttons
+  $(document).on("click", "button.delete", handlePostDelete);
+  $(document).on("click", "button.edit", handlePostEdit);
+  // Variable to hold our posts
+  var posts;
 
-  // Gets the part of the url that comes after the "?" (which we have if we're updating a post)
+  // The code below handles the case where we want to get blog posts for a specific author
+  // Looks for a query param in the url for author_id
   var url = window.location.search;
-  var postId;
   var authorId;
-  var categoryId;
-
-  // Sets a flag for whether or not we're updating a post to be false initially
-  var updating = false;
-  
-  // creating or updating a post
-  // If we have this section in our url, we pull out the post id from the url
-  // In '?post_id=1', postId is 1
-  if (url.indexOf("?post_id=") !== -1) {
-    postId = url.split("=")[1];
-    getPostData(postId, "post");
-  }
-  // Otherwise if we have an author_id in our url, preset the author select box to be our Author
-  else if (url.indexOf("?author_id=") !== -1) {
+  if (url.indexOf("?author_id=") !== -1) {
     authorId = url.split("=")[1];
+    getPosts(authorId);
+  }
+  // If there's no authorId we just get all posts as usual
+  else {
+    getPosts();
   }
 
-  // Getting the authors, and their posts
-  //getAuthors();
 
-  // Getting the Category dropdown
-  getCategory();
-
-  // A function for handling what happens when the form to create a new post is submitted
-  function handleFormSubmit(event) {
-    event.preventDefault();
-    // Wont submit the post if we are missing a body, title, or author
-    if (!titleInput.val().trim() || !bodyInput.val().trim() || !categorySelect.val()) {
-      return;
+  // This function grabs posts from the database and updates the view
+  function getPosts(author) {
+    authorId = author || "";
+    if (authorId) {
+      authorId = "/?author_id=" + authorId;
     }
-    // Constructing a newPost object to hand to the database
-    var newPost = {
-      post_title: titleInput
-        .val()
-        .trim(),
-      post_body: bodyInput
-        .val()
-        .trim(),
-      categoryId: categorySelect.val(),
-      authorId: "1"     // guest author ID is 1
-    };
-
-    // If we're updating a post run updatePost to update a post
-    // Otherwise run submitPost to create a whole new post
-    if (updating) {
-      newPost.id = postId;
-      updatePost(newPost);
-    }
-    else {
-      submitPost(newPost);
-    }
-  }
-
-  // Submits a new post and brings user to blog page upon completion
-  function submitPost(post) {
-    $.post("/api/forums", post, function() {
-      console.log( post );
-      location.reload();   // this is a temporary code
-      window.location.href = "/forum"; 
-    });
-  }
-
-  // Gets post data for the current post if we're editing, or if we're adding to an author's existing posts
-  function getPostData(id, type) {
-    var queryUrl;
-    switch (type) {
-    case "post":
-      queryUrl = "/api/forums/" + id;
-      break;
-    case "author":
-      queryUrl = "/api/authors/" + id;
-      break;
-    default:
-      return;
-    }
-    $.get(queryUrl, function(data) {
-      if (data) {
-        console.log(data.AuthorId || data.id);
-        // If this post exists, prefill our forum forms with its data
-        titleInput.val(data.title);
-        bodyInput.val(data.body);
-        authorId = data.AuthorId || data.id;
-        // If we have a post with this id, set a flag for us to know to update the post
-        // when we hit submit
-        updating = true;
+    $.get("/api/posts" + authorId, function(data) {
+      console.log("Posts", data);
+      posts = data;
+      if (!posts || !posts.length) {
+        displayEmpty(author);
+      }
+      else {
+        initializeRows();
       }
     });
   }
 
-  // Update a given post, bring user to the blog page when done
-  function updatePost(post) {
+  // This function does an API call to delete posts
+  function deletePost(id) {
     $.ajax({
-      method: "PUT",
-      url: "/api/forums",
-      data: post
+      method: "DELETE",
+      url: "/api/forums/" + id
     })
       .then(function() {
-        window.location.href = "/forum";
+        getPosts(postCategorySelect.val());
       });
   }
-  // post create / uppdate ends here
 
-  // Getting the authors, and their posts
-  getAuthors();
-
-  // Getting the Category dropdown
-  getCategory();
-
-
-  // A function to get Authors and then render our list of Authors
-  function getAuthors() {
-    $.get("/api/authors", renderAuthorList);
-  }
-  // Function to either render a list of authors, or if there are none, direct the user to the page
-  // to create an author first
-  function renderAuthorList(data) {
-    if (!data.length) {
-      window.location.href = "/authors";
+  // InitializeRows handles appending all of our constructed post HTML inside blogContainer
+  function initializeRows() {
+    blogContainer.empty();
+    var postsToAdd = [];
+    for (var i = 0; i < posts.length; i++) {
+      postsToAdd.push(createNewRow(posts[i]));
     }
-    $(".hidden").removeClass("hidden");
-    var rowsToAdd = [];
-    for (var i = 0; i < data.length; i++) {
-      rowsToAdd.push(createAuthorRow(data[i]));
+    blogContainer.append(postsToAdd);
+  }
+
+  // This function constructs a post's HTML
+  function createNewRow(post) {
+    var formattedDate = new Date(post.createdAt);
+    formattedDate = moment(formattedDate).format("MMMM Do YYYY, h:mm:ss a");
+    var newPostCard = $("<div>");
+    newPostCard.addClass("card");
+    var newPostCardHeading = $("<div>");
+    newPostCardHeading.addClass("card-header");
+    var deleteBtn = $("<button>");
+    deleteBtn.text("x");
+    deleteBtn.addClass("delete btn btn-danger");
+    var editBtn = $("<button>");
+    editBtn.text("EDIT");
+    editBtn.addClass("edit btn btn-info");
+    var newPostTitle = $("<h2>");
+    var newPostDate = $("<small>");
+    var newPostAuthor = $("<h5>");
+    newPostAuthor.text("Written by: " + post.Author.name);
+    newPostAuthor.css({
+      float: "right",
+      color: "blue",
+      "margin-top":
+      "-10px"
+    });
+    var newPostCardBody = $("<div>");
+    newPostCardBody.addClass("card-body");
+    var newPostBody = $("<p>");
+    newPostTitle.text(post.title + " ");
+    newPostBody.text(post.body);
+    newPostDate.text(formattedDate);
+    newPostTitle.append(newPostDate);
+    newPostCardHeading.append(deleteBtn);
+    newPostCardHeading.append(editBtn);
+    newPostCardHeading.append(newPostTitle);
+    newPostCardHeading.append(newPostAuthor);
+    newPostCardBody.append(newPostBody);
+    newPostCard.append(newPostCardHeading);
+    newPostCard.append(newPostCardBody);
+    newPostCard.data("post", post);
+    return newPostCard;
+  }
+
+  // This function figures out which post we want to delete and then calls deletePost
+  function handlePostDelete() {
+    var currentPost = $(this)
+      .parent()
+      .parent()
+      .data("post");
+    deletePost(currentPost.id);
+  }
+
+  // This function figures out which post we want to edit and takes it to the appropriate url
+  function handlePostEdit() {
+    var currentPost = $(this)
+      .parent()
+      .parent()
+      .data("post");
+    window.location.href = "/thread?post_id=" + currentPost.id;
+  }
+
+  // This function displays a message when there are no posts
+  function displayEmpty(id) {
+    var query = window.location.search;
+    var partial = "";
+    if (id) {
+      partial = " for Author #" + id;
     }
-    authorSelect.empty();
-    authorSelect.append(rowsToAdd);
-    authorSelect.val(authorId);
+    blogContainer.empty();
+    var messageH2 = $("<h2>");
+    messageH2.css({ "text-align": "center", "margin-top": "50px" });
+    messageH2.html("No posts yet" + partial + ", navigate <a href='/thread" + query +
+    "'>here</a> in order to get started.");
+    blogContainer.append(messageH2);
   }
 
-  // Creates the author options in the dropdown
-  function createAuthorRow(author) {
-    var listOption = $("<option>");
-    listOption.attr("value", author.id);
-    listOption.text(author.name);
-    return listOption;
-  }
-  // creating author list ends here
-
-  // Getting the category
-  getCategory();
-
-  // A function to get Authors and then render our list of Authors
-  function getCategory() {
-    $.get("/api/category", renderCategoryList);
-  }
-  // Function to either render a list of authors, or if there are none, direct the user to the page
-  // to create an author first
-  function renderCategoryList(data) {
-    if (!data.length) {
-      window.location.href = "/category";
-    }
-    $(".hidden").removeClass("hidden");
-    var rowsToAdd = [];
-    for (var i = 0; i < data.length; i++) {
-      rowsToAdd.push(createCategoryRow(data[i]));
-    }
-    categorySelect.empty();
-    categorySelect.append(rowsToAdd);
-    categorySelect.val(authorId);
-  }
-
-  // Creates the author options in the dropdown
-  function createCategoryRow(category) {
-    var listOption = $("<option>");
-    listOption.attr("value", category.id);
-    listOption.text(category.name);
-    return listOption;
-  }
-  // creating author list ends here
 });
